@@ -1,0 +1,17 @@
+# USB_VID
+# USB vendor ID
+USB_VID ?= $(USB_VID_TESTING)
+
+# USB_PID
+# USB product ID
+USB_PID ?= $(USB_PID_TESTING)
+
+# RIOTBASE
+# Absolute path to the RIOT base directory
+RIOTBASE ?= ~/nand-base/riot/RIOT
+
+# IDF_PATH
+IDF_PATH ?= ~/nand-base/riot/esp-idf
+
+# RIOT headers to include
+include $(RIOTBASE)/Makefile.include
