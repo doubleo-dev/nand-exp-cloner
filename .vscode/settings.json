@@ -1,0 +1,16 @@
+{
+  "files.associations": {
+    "*.include": "makefile",
+    "ztimer.h": "c",
+    "pcf857x.h": "c",
+    "gpio.h": "c",
+    "hd44780.h": "c",
+    "hd44780_params.h": "c",
+    "i2c.h": "c",
+    "hd44780_internal.h": "c",
+    "pcf857x_params.h": "c",
+    "array": "c",
+    "string": "c",
+    "string_view": "c"
+  }
+}

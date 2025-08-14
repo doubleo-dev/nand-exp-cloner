@@ -1,0 +1,80 @@
+--- a/drivers/include/pcf857x.h
++++ b/drivers/include/pcf857x.h
+@@ -573,6 +573,11 @@ void pcf857x_gpio_set(pcf857x_t *dev, uint8_t pin);
+  */
+ void pcf857x_gpio_toggle(pcf857x_t *dev, uint8_t pin);
+ 
++int pcf857x_port_write(pcf857x_t *dev, pcf857x_data_t pattern);
++int pcf857x_port_write_masked(pcf857x_t *dev,
++                              pcf857x_data_t pattern,
++                              pcf857x_data_t mask);
++
+ #if IS_USED(MODULE_PCF857X_IRQ) || DOXYGEN
+ /**
+  * @brief   Enable pin interrupt
+--- a/drivers/pcf857x/pcf857x.c
++++ b/drivers/pcf857x/pcf857x.c
+@@ -334,6 +334,63 @@ void pcf857x_gpio_toggle(pcf857x_t *dev, uint8_t pin)
+     return pcf857x_gpio_write(dev, pin, (dev->out & (1 << pin)) ? 0 : 1);
+ }
+ 
++int pcf857x_port_write(pcf857x_t *dev, pcf857x_data_t pattern)
++{
++    assert(dev != NULL);
++
++    /* 1비트 = 입력(HIGH), 0비트 = 출력 LOW */
++    dev->modes = pattern; /* 1 -> input, 0 -> output */
++    dev->out   = pattern; /* input일 때 내부 out=1 유지, output일 때 0 */
++
++    pcf857x_data_t data = dev->modes | dev->out;
++
++    _acquire(dev);
++    int res = _write(dev, data);
++#if IS_USED(MODULE_PCF857X_IRQ)
++    if (res == PCF857X_OK) {
++        /* 같은 칩의 입력으로 되먹임되는 경우 ISR 갱신 필요 */
++        _update_state(dev); /* 내부에서 release */
++        return res;
++    }
++    _release(dev);
++    return res;
++#else
++    _release(dev);
++    return res;
++#endif
++}
++
++int pcf857x_port_write_masked(pcf857x_t *dev,
++                              pcf857x_data_t pattern,
++                              pcf857x_data_t mask)
++{
++    assert(dev != NULL);
++
++    /* 적용될 비트들만 분리 */
++    pcf857x_data_t ones  =  pattern & mask;   /* 1로 만들 핀 (입력/HIGH) */
++
++    /* mode: 1 = input, 0 = output */
++    dev->modes = (dev->modes & ~mask) | ones;
++    /* out: input일 때 1, output LOW일 때 0 */
++    dev->out   = (dev->out   & ~mask) | ones;
++
++    pcf857x_data_t data = dev->modes | dev->out;
++
++    _acquire(dev);
++    int res = _write(dev, data);
++#if IS_USED(MODULE_PCF857X_IRQ)
++    if (res == PCF857X_OK) {
++        _update_state(dev); /* 내부에서 release */
++        return res;
++    }
++    _release(dev);
++    return res;
++#else
++    _release(dev);
++    return res;
++#endif
++}
++
+ /** Functions for internal use only */
+ 
+ #if IS_USED(MODULE_PCF857X_IRQ)

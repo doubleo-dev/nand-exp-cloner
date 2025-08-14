@@ -1,0 +1,36 @@
+{
+    "configurations": [
+        {
+            "name": "xtensa-esp32s3",
+            "includePath": [
+                // ESP32-S3 specific includes
+                "~/nand-base/riot/esp-idf/components/**/include",
+                "~/nand-base/riot/RIOT/cpu/esp_common/include",
+                "~/nand-base/riot/RIOT/cpu/esp32/vendor/include",
+                "~/nand-base/riot/RIOT/cpu/esp32/esp-idf/include",
+                "~/nand-base/riot/RIOT/cpu/esp32/include",
+                "~/nand-base/riot/RIOT/boards/common/esp32x/include",
+                "~/nand-base/riot/RIOT/boards/esp32s3-devkit/include",
+                // RIOT includes
+                "~/nand-base/riot/RIOT/core/include",
+                "~/nand-base/riot/RIOT/core/lib/include",
+                //"~/nand-base/riot/RIOT/cpu/**/include",
+                //"~/nand-base/riot/RIOT/boards/**/include",
+                "~/nand-base/riot/RIOT/drivers/include",
+                "~/nand-base/riot/RIOT/drivers/**/include",
+                "~/nand-base/riot/RIOT/pkg/**/include",
+                "~/nand-base/riot/RIOT/sys/include",
+                "~/nand-base/riot/RIOT/sys/**/include",
+                // Other includes
+                "~/nand-base/riot/**"
+            ],
+            "defines": [],
+            "compilerPath": "~/nand-base/riot/.espressif/tools/xtensa-esp32s3-elf/esp-2021r2-patch3-8.4.0/xtensa-esp32s3-elf/bin/xtensa-esp32s3-elf-g++",
+            "cStandard": "gnu99",
+            "cppStandard": "gnu++11",
+            "configurationProvider": "ms-vscode.cmake-tools",
+            "intelliSenseMode": "macos-gcc-x86" // Set macos to avoid __linux__ guard
+        }
+    ],
+    "version": 4
+}
